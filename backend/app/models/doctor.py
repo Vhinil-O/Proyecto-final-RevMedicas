@@ -7,6 +7,6 @@ class doctors(SQLModel, table=True) :
     nombre: str
     especialidad: str
 
-    user_id: int = Field(default=None, foreign_key="user.id")
+    user_id: int = Field(default=None, foreign_key="users.id_user")
 
 
