@@ -10,7 +10,7 @@
 - Por ultimo instale todas las dependencias necesarias, para su comodidad solo ejecute: `pip install -r requirements.txt`
 
 Por ultimo ejecute el servidor
-- `python main.py`
+- `uvicorn app.main:app --reload`
 
 ---
 
