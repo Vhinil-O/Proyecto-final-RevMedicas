@@ -4,6 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config.database import create_db_and_tables
 
+from app.routes import doctors as doctor_router
+from app.routes import patients as patient_router
+from app.routes import appointments as appointment_router
+
 from app.models.appointment import appointments
 from app.models.doctor import doctors
 from app.models.patient import patients
@@ -29,3 +33,7 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "El sistema del hospital está funcionando"}
+
+app.include_router(doctor_router.router, prefix="/doctors", tags=["Doctores"]) # Esto conecta el archivo de doctores con la URL "/doctors"
+app.include_router(patient_router.router, prefix="/patients", tags=["Pacientes"])
+app.include_router(appointment_router.router, prefix="/appointments", tags=["Citas"])
