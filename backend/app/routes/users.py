@@ -6,6 +6,9 @@ from app.config.database import get_session
 from app.models.user import UserCreate, UserRead, users
 from app.utils.security import get_password_hash 
 
+from app.middleware.auth import get_current_user
+from app.models.user import users
+
 router = APIRouter()
 
 
@@ -38,5 +41,5 @@ def create_user(user: UserCreate, session: Session = Depends(get_session)):
     return db_user
 
 @router.get("/", response_model=List[UserRead])
-def read_users(session: Session = Depends(get_session)):
+def read_users(session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     return session.exec(select(users)).all()

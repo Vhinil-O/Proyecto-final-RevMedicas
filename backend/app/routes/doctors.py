@@ -5,6 +5,9 @@ from typing import List
 from app.config.database import get_session #Se inporta la configuración de la base de datos (para poder abrir sesiones)
 from app.models.doctor import DoctorCreate, DoctorRead, doctors #Se importan los modelos
 
+from app.models.user import users # Para saber qué tipo de dato devuelve el guardia
+from app.middleware.auth import get_current_user 
+
 router = APIRouter()
 
 #Por qué se unio routes y controller?: En FastAPI, la "Ruta" y la "Función" van pegadas en el mismo archivo para simplificar.
@@ -12,7 +15,7 @@ router = APIRouter()
 # "@" encima de una funcion (decorador) 
 
 @router.post("/", response_model=DoctorRead)
-def create_doctor(doctor: DoctorCreate, session: Session = Depends(get_session)):
+def create_doctor(doctor: DoctorCreate, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     """
     Controlador para registrar un nuevo doctor.
     Recibe los datos limpios, los valida y los guarda.
@@ -25,7 +28,7 @@ def create_doctor(doctor: DoctorCreate, session: Session = Depends(get_session))
 
 
 @router.get("/", response_model=List[DoctorRead])
-def read_doctors(session: Session = Depends(get_session)):
+def read_doctors(session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     
     #Controlador para ver la agenda o lista de doctores.
     
@@ -33,7 +36,7 @@ def read_doctors(session: Session = Depends(get_session)):
     return doctors_list
 
 @router.get("/{doctor_id}", response_model=DoctorRead)
-def read_doctor(doctor_id: int, session: Session = Depends(get_session)): # LEER UNO (GET) - Para ver detalles específicos
+def read_doctor(doctor_id: int, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)): # LEER UNO (GET) - Para ver detalles específicos
     doctor = session.get(doctors, doctor_id)
     if not doctor:
         raise HTTPException(status_code=404, detail="Doctor no encontrado")
@@ -41,7 +44,7 @@ def read_doctor(doctor_id: int, session: Session = Depends(get_session)): # LEER
 
 
 @router.put("/{doctor_id}", response_model=DoctorRead)
-def update_doctor(doctor_id: int, doctor_data: DoctorCreate, session: Session = Depends(get_session)):
+def update_doctor(doctor_id: int, doctor_data: DoctorCreate, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     
     db_doctor = session.get(doctors, doctor_id) #Busca el doctor 
     if not db_doctor:
@@ -60,7 +63,7 @@ def update_doctor(doctor_id: int, doctor_data: DoctorCreate, session: Session = 
 
 
 @router.delete("/{doctor_id}")
-def delete_doctor(doctor_id: int, session: Session = Depends(get_session)):
+def delete_doctor(doctor_id: int, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     doctor = session.get(doctors, doctor_id)
     if not doctor:
         raise HTTPException(status_code=404, detail="Doctor no encontrado")

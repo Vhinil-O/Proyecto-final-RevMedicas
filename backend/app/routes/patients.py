@@ -6,14 +6,17 @@ from typing import List
 # Importamos la sesión de base de datos
 from app.config.database import get_session
 # Importamos el modelo de Pacientes
-
 from app.models.patient import PatientCreate, PatientRead, patients #Si te sale error aquí revisa que tu archivo models/patient.py tenga estas clases
+
+from app.models.user import users # Para saber qué tipo de dato devuelve el guardia
+from app.middleware.auth import get_current_user 
+
 
 router = APIRouter()
 
 
-@router.post("/", response_model=PatientRead) # 1. REGISTRAR PACIENTE (POST)
-def create_patient(patient: PatientCreate, session: Session = Depends(get_session)):
+@router.post("/", response_model=PatientRead) #REGISTRAR PACIENTE (POST)
+def create_patient(patient: PatientCreate, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
    
     db_patient = patients.model_validate(patient)
     session.add(db_patient)
@@ -22,7 +25,7 @@ def create_patient(patient: PatientCreate, session: Session = Depends(get_sessio
     return db_patient
 
 @router.get("/", response_model=List[PatientRead]) # LISTAR PACIENTES (GET)
-def read_patients(session: Session = Depends(get_session)):
+def read_patients(session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     """
     Obtiene la lista de todos los pacientes registrados.
     """
@@ -31,15 +34,15 @@ def read_patients(session: Session = Depends(get_session)):
 
 
 @router.get("/{patient_id}", response_model=PatientRead) # VER UN PACIENTE (GET)
-def read_patient(patient_id: int, session: Session = Depends(get_session)):
+def read_patient(patient_id: int, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     patient = session.get(patients, patient_id)
     if not patient:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
     return patient
 
 
-@router.put("/{patient_id}", response_model=PatientRead) # 4. ACTUALIZAR PACIENTE (PUT)
-def update_patient(patient_id: int, patient_data: PatientCreate, session: Session = Depends(get_session)):
+@router.put("/{patient_id}", response_model=PatientRead) #ACTUALIZAR PACIENTE (PUT)
+def update_patient(patient_id: int, patient_data: PatientCreate, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     
     db_patient = session.get(patients, patient_id)# Buscar
     if not db_patient:
@@ -58,7 +61,7 @@ def update_patient(patient_id: int, patient_data: PatientCreate, session: Sessio
 
 
 @router.delete("/{patient_id}") #ELIMINAR PACIENTE 
-def delete_patient(patient_id: int, session: Session = Depends(get_session)):
+def delete_patient(patient_id: int, session: Session = Depends(get_session), current_user: users = Depends(get_current_user)):
     patient = session.get(patients, patient_id)
     if not patient:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
