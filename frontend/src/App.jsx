@@ -1,18 +1,21 @@
-// src/App.jsx
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login'; // 👈 Importamos tu Login
+
+//importamos las paginas
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard'; 
 
 function App() {
   return (
     <Routes>
-      {/* Ruta para el Login */}
+      {/* 1. Ruta del Login */}
       <Route path="/login" element={<Login />} />
       
-      {/* Redirección automática: Si entran a "/", los manda a "/login" */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      {/* 2. Ruta del Dashboard (¡Esta es la que te falta!) */}
+      <Route path="/dashboard" element={<Dashboard />} />
       
-      {/* Aquí agregaremos la ruta /dashboard más adelante */}
+      {/* 3. Redirección automática: Si entran a la raíz, mándalos al login */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
