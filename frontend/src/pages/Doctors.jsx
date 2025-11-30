@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import api from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 function Doctors() {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
 
   // Cargar doctores al iniciar
@@ -46,7 +48,8 @@ function Doctors() {
       <div className="flex-grow-1 p-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="fw-bold text-secondary">Directorio de Doctores</h2>
-          <button className="btn btn-primary btn-lg rounded-pill shadow-sm">
+          <button onClick={() => navigate('/doctors/create')} 
+          className="btn btn-primary btn-lg rounded-pill shadow-sm" >
             + Nuevo Doctor
           </button>
         </div>
@@ -82,8 +85,8 @@ function Doctors() {
                       </p>
                       
                       <div className="d-flex gap-2 mt-auto">
-                        <button className="btn btn-sm btn-outline-primary rounded-pill px-3">
-                          Ver Perfil
+                        <button className="btn btn-sm btn-outline-primary rounded-pill px-3" onClick={() => navigate(`/doctors/edit/${doc.id_doctor}`)}>
+                          Editar
                         </button>
                         <button 
                           onClick={() => handleDelete(doc.id_doctor)}
