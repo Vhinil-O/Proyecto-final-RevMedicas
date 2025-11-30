@@ -64,3 +64,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+input[type="datetime-local"],
+input[type="date"] {   
+    cursor: pointer;
+    position: relative;
+}
+
+/* 2. Ícono Personalizado Negro para AMBOS tipos */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator { 
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="black" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>');
+    background-position: center;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    width: 25px;
+    height: 25px;
+    opacity: 1;
+    cursor: pointer;
+}

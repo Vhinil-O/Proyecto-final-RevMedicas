@@ -8,6 +8,8 @@ import Doctors from './pages/Doctors';
 import DoctorForm from './pages/DoctorForm'
 import Patients from './pages/Patients';
 import PatientForm from './pages/PatientForm';
+import Appointments from './pages/Appointments';
+import AppointmentForm from './pages/AppointmentForm';
 
 function App() {
   return (
@@ -26,6 +28,9 @@ function App() {
       <Route path="/patients" element={<Patients />} />
       <Route path="/patients/create" element={<PatientForm />} />
       <Route path="/patients/edit/:id" element={<PatientForm />} />
+
+      <Route path="/appointments" element={<Appointments />} />
+      <Route path="/appointments/create" element={<AppointmentForm />} />
 
     </Routes>
   );

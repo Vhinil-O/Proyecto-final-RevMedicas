@@ -83,7 +83,7 @@ function Dashboard() {
             <div className="card border-0 shadow-sm h-100">
               <div className="card-body d-flex align-items-center">
                 <div className="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-                  <span className="fs-4">wj</span>
+                  <span className="fs-4">😷</span>
                 </div>
                 <div>
                   <h6 className="card-subtitle text-muted mb-1">Pacientes Registrados</h6>
