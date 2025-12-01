@@ -5,6 +5,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const role = localStorage.getItem('role');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -30,11 +31,13 @@ function Sidebar() {
             <span>📊</span> Panel Principal
           </Link>
         </li>
+        {role == 'admin' && (
         <li className="nav-item mb-2">
           <Link to="/doctors" className={isActive('/doctors')}>
             <span>👨‍⚕️</span> Doctores
           </Link>
         </li>
+        )}
         <li className="nav-item mb-2">
           <Link to="/patients" className={isActive('/patients')}>
             <span>🤒</span> Pacientes

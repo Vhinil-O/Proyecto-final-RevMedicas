@@ -24,9 +24,12 @@ function Login() {
       const response = await api.post('/token', formData);
 
     
-      const token = response.data.access_token;   // Guardamos el token y redirigimos
-      localStorage.setItem('token', token);
-      
+      const {access_token, role, user_id} = response.data;   // Guardamos el token y redirigimos
+
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('role', role);       
+      localStorage.setItem('userId', user_id);
+
       console.log("Login correcto, token guardado.");
       navigate('/dashboard');
 

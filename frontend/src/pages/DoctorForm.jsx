@@ -9,6 +9,7 @@ function DoctorForm() {
   
   const navigate = useNavigate();
   const { id } = useParams(); // Capturamos el ID de la URL (si existe)
+  const [email, setEmail] = useState('');
 
  
   useEffect(() => {
@@ -43,7 +44,8 @@ function DoctorForm() {
         
         await api.post('/doctors/', {
           nombre: nombre,
-          especialidad: especialidad
+          especialidad: especialidad,
+          email: email
         });
         alert('¡Doctor registrado con éxito!');
       }
@@ -59,7 +61,6 @@ function DoctorForm() {
       <Sidebar />
 
       <div className="flex-grow-1 p-5">
-        {/* Título dinámico: Cambia según si estamos editando o creando */}
         <h2 className="fw-bold text-secondary mb-4">
           {id ? 'Editar Doctor' : 'Registrar Nuevo Doctor'}
         </h2>
@@ -78,6 +79,23 @@ function DoctorForm() {
               />
             </div>
 
+            {!id && (
+            <div className="mb-3">
+              <label className="form-label fw-bold text-muted">Correo Electrónico</label>
+              <input 
+                type="email" 
+                className="form-control form-control-lg bg-light border-0"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="doctor@hospital.com"
+                required 
+              />
+              <div className="form-text text-success">
+                * Se creará una cuenta con contraseña: <strong>123456789</strong>
+              </div>
+            </div>
+            )}
+
             <div className="mb-4">
               <label className="form-label fw-bold text-muted">Especialidad</label>
               <select 
@@ -93,6 +111,10 @@ function DoctorForm() {
                 <option value="Neurología">Neurología</option>
                 <option value="Dermatología">Dermatología</option>
               </select>
+            </div>
+
+            <div className="mb-4">
+              <p>{id ? 'Si desea actualizar su contraseña porfavor contacte al equipo de TI' : ''}</p>
             </div>
 
             <div className="d-flex gap-2">

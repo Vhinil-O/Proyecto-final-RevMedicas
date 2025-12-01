@@ -7,6 +7,7 @@ from app.models.doctor import DoctorCreate, DoctorRead, doctors #Se importan los
 
 from app.models.user import users # Para saber qué tipo de dato devuelve el guardia
 from app.middleware.auth import get_current_user 
+from app.utils.security import get_password_hash
 
 router = APIRouter()
 
@@ -20,11 +21,40 @@ def create_doctor(doctor: DoctorCreate, session: Session = Depends(get_session),
     Controlador para registrar un nuevo doctor.
     Recibe los datos limpios, los valida y los guarda.
     """
-    db_doctor = doctors.model_validate(doctor)
-    session.add(db_doctor)
-    session.commit()
-    session.refresh(db_doctor)
-    return db_doctor
+
+    user_existente = session.exec(select(users).where(users.email == doctor.email)).first()
+    if user_existente:
+        raise HTTPException(status_code=400, detail="Ese correo ya está registrado en el sistema")
+
+    try:
+        password_default = "123456789" 
+        
+        nuevo_usuario = users(
+            email=doctor.email,
+            hashed_password=get_password_hash(password_default), 
+            rol="doctor",
+            is_active=True
+        )
+        session.add(nuevo_usuario)
+        session.commit()
+        session.refresh(nuevo_usuario) 
+
+        datos_doctor = doctor.model_dump(exclude={"email"}) 
+        
+        nuevo_doctor = doctors(
+            **datos_doctor,
+            user_id=nuevo_usuario.id_user 
+        )
+        
+        session.add(nuevo_doctor)
+        session.commit()
+        session.refresh(nuevo_doctor)
+        
+        return nuevo_doctor
+
+    except Exception as e:
+        session.rollback() # Si algo falla, deshacemos todo para no dejar datos basura
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/", response_model=List[DoctorRead])

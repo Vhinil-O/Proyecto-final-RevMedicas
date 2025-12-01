@@ -36,4 +36,7 @@ def login_for_access_token(
     
     access_token = create_access_token(subject=user.email) #Se genera el token
     
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, 
+        "token_type": "bearer",
+        "role": user.rol,    
+        "user_id": user.id_user}
