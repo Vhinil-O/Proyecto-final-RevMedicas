@@ -13,6 +13,7 @@ class DoctorBase(SQLModel): #la base, es decir datos compartidos
     especialidad: str
 
 class DoctorCreate(DoctorBase): #hereda doctorBase,es identico a la funcion anterior
+    email: str
     pass #significa literalmente no hagas nada
 
 
