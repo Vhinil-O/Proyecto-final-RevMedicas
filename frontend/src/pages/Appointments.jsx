@@ -8,6 +8,8 @@ function Appointments() {
   const [appointments, setAppointments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
+  const role = localStorage.getItem('role'); 
+  const isAdmin = role === 'admin';
   
  
   
@@ -91,13 +93,14 @@ function Appointments() {
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
-            
+            {isAdmin && (
             <button 
               onClick={() => navigate('/appointments/create')}
               className="btn btn-success text-white fw-bold btn-lg rounded-pill shadow-sm px-4"
             >
               + Nueva Cita
             </button>
+            )}
           </div>
         </div>
 
@@ -138,6 +141,7 @@ function Appointments() {
                     </td>
                     <td className="text-end pe-4">
 
+                      {isAdmin && (
                       <button 
                         onClick={() => navigate(`/appointments/edit/${appt.id_appointment}`)} 
                         className="btn btn-sm btn-outline-primary rounded-pill px-3 me-2"
@@ -145,6 +149,7 @@ function Appointments() {
                       >
                         <i className="bi bi-pencil-fill"></i> Editar
                       </button>
+                      )}
                       <button 
                         onClick={() => handleDelete(appt.id_appointment)}
                         className="btn btn-sm btn-outline-danger rounded-pill px-3"

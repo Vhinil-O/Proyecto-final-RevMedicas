@@ -7,6 +7,8 @@ import api from '../services/api';
 function Patients() {
   const [patients, setPatients] = useState([]);
   const navigate = useNavigate();
+  const role = localStorage.getItem('role'); 
+  const isAdmin = role === 'admin';
 
   // 1. Cargar pacientes al iniciar
   useEffect(() => {
@@ -41,12 +43,14 @@ function Patients() {
       <div className="flex-grow-1 p-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="fw-bold text-secondary">Listado de Pacientes</h2>
+          {isAdmin && (
           <button 
             onClick={() => navigate('/patients/create')} 
             className="btn btn-warning text-white fw-bold btn-lg rounded-pill shadow-sm"
           >
             + Nuevo Paciente
           </button>
+          )}
         </div>
 
         <div className="row g-4">
@@ -71,6 +75,7 @@ function Patients() {
                     <div className="fw-medium">{patient.email}</div>
                   </div>
 
+                  {isAdmin && (
                   <div className="d-flex gap-2">
                     <button 
                       onClick={() => navigate(`/patients/edit/${patient.id_patient}`)}
@@ -85,6 +90,7 @@ function Patients() {
                       Eliminar
                     </button>
                   </div>
+                  )}
 
                 </div>
               </div>
