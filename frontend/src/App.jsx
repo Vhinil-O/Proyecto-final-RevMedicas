@@ -32,6 +32,8 @@ function App() {
       <Route path="/appointments" element={<Appointments />} />
       <Route path="/appointments/create" element={<AppointmentForm />} />
 
+      <Route path="/appointments/edit/:id" element={<AppointmentForm />} />
+
     </Routes>
   );
 }

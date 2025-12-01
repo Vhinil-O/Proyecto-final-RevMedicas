@@ -20,3 +20,9 @@ class AppointmentRead(AppointmentBase):#LEER: Lo que devuelve el sistema (incluy
 
 class appointments(AppointmentBase, table=True):# TABLA: La configuración de base de datos
     id_appointment: int | None = Field(default=None, primary_key=True)
+
+class AppointmentUpdate(SQLModel): #ACTUALIZAR una cita existente
+    doctor_id: int | None = None
+    patient_id: int | None = None
+    fecha: datetime | None = None
+    status: str | None = None

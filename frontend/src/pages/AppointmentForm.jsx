@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import api from '../services/api';
 
 function AppointmentForm() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditing = !!id;
 
   // Estados para los datos del formulario
   const [doctorId, setDoctorId] = useState('');
@@ -26,13 +28,28 @@ function AppointmentForm() {
         ]);
         setDoctors(docRes.data);
         setPatients(patRes.data);
+
+        //Si estamos editando
+        if (isEditing){
+          const response = await api.get(`/appointments/${id}`);
+          const cita = response.data;
+
+          setDoctorId(cita.doctor_id);
+          setPatientId(cita.patient_id);
+
+          if (cita.fecha) {
+          setFecha(cita.fecha.slice(0,16));
+          }
+        }
+
+        
       } catch (error) {
         console.error("Error cargando listas:", error);
         alert("Error cargando la lista de doctores o pacientes");
       }
     };
     fetchResources();
-  }, []);
+  }, [id, isEditing]); //Ejecutar el cambio al terminar
 
   
   const handleSubmit = async (e) => {// Se envia el formulario
@@ -44,16 +61,26 @@ function AppointmentForm() {
       return;
     }
 
-    try {
-      // Enviamos al Backend
-      await api.post('/appointments/', {
-        doctor_id: parseInt(doctorId),   // Convertimos a número entero
-        patient_id: parseInt(patientId), // Convertimos a número entero
-        fecha: fecha,                    // El formato de datetime-local es compatible (YYYY-MM-DDTHH:mm)
-        status: "Agendada"               // Valor por defecto
-      });
+    //Para poder editar se 'normalizaron' los parametros
+    const datosCita = {
+      doctor_id: parseInt(doctorId),
+      patient_id:parseInt(patientId),
+      fecha: fecha,
+      status: "Agendada"
+    };
 
-      alert("¡Cita agendada con éxito!");
+    try {
+
+      if (isEditing) {
+        // MODO EDICION
+        await api.put(`/appointments/${id}`, datosCita);
+        alert("¡Cita actualizada con éxito!");
+      } else {
+        // MODO CREACION
+        await api.post('/appointments/', datosCita);
+        alert("¡Cita agendada con éxito!");
+      }
+      
       navigate('/appointments'); // Regresamos a la agenda
 
     } catch (error) {
@@ -72,7 +99,7 @@ function AppointmentForm() {
       <Sidebar />
 
       <div className="flex-grow-1 p-5">
-        <h2 className="fw-bold text-secondary mb-4">Agendar Nueva Cita</h2>
+        <h2 className="fw-bold text-secondary mb-4">{isEditing ? 'Editar cita' : 'Agendar Nueva Cita'}</h2>
 
         <div className="card border-0 shadow-sm rounded-4 p-4" style={{ maxWidth: '600px' }}>
           <form onSubmit={handleSubmit}>
@@ -133,7 +160,7 @@ function AppointmentForm() {
             {/* BOTONES */}
             <div className="d-flex gap-2">
               <button type="submit" className="btn btn-success text-white fw-bold btn-lg rounded-pill px-4">
-                Confirmar Cita
+                {isEditing ? 'Guardar Cambios' : 'Comfirmar Cita'}
               </button>
               <button 
                 type="button" 

@@ -137,6 +137,14 @@ function Appointments() {
                       </span>
                     </td>
                     <td className="text-end pe-4">
+
+                      <button 
+                        onClick={() => navigate(`/appointments/edit/${appt.id_appointment}`)} 
+                        className="btn btn-sm btn-outline-primary rounded-pill px-3 me-2"
+                        title="Editar esta cita"
+                      >
+                        <i className="bi bi-pencil-fill"></i> Editar
+                      </button>
                       <button 
                         onClick={() => handleDelete(appt.id_appointment)}
                         className="btn btn-sm btn-outline-danger rounded-pill px-3"
